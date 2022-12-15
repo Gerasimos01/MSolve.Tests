@@ -95,7 +95,22 @@ namespace MGroup.FEM.Structural.Tests.Integration
 			Assert.True(Utilities.AreDisplacementsSame(modelBuilder.GetExpectedDisplacementsPeriodicLoadADINA(),
 																computedDisplacements, tolerance: 1e-5));
 		}
+		[Fact]
+		private static void RunTransientTestPeriodicObject1()
+		{
+			timestep = 0.0005; totalTime = 0.16;
+			double[] time = new double[] { 0, 0.01, 0.03, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16 };
+		    double[] timeFunctionValues = new double[] { 0, 1, -1, 1, -1, 1, -1, 1, -1, 0 };
+			var timeProvider = new TimeFunctionPeriodiTrianglePulse(time, timeFunctionValues);
+			modelBuilder.monitoredDof = StructuralDof.TranslationX;
+			Model model = modelBuilder.CreateModel();
+			modelBuilder.AddPeriodicTransientLoadTimeFunc(model, timeProvider.TimeFunctionPeriodicLoad);
 
+			double[] computedDisplacements = SolveModelDynamic(model);
+			timestep = 0.0005;totalTime = 0.08;
+			Assert.True(Utilities.AreDisplacementsSame(modelBuilder.GetExpectedDisplacementsPeriodicLoadADINA(),
+																computedDisplacements, tolerance: 1e-5));
+		}
 		private static double[] SolveModelDynamic(Model model)
 		{
 			var solverFactory = new SuiteSparseSolver.Factory() { DofOrderer = new DofOrderer(new NodeMajorDofOrderingStrategy(), new NodeMajorReordering()) };

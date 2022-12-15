@@ -14,7 +14,7 @@ using MGroup.MSolve.Discretization.BoundaryConditions;
 
 namespace MGroup.FEM.Structural.Tests.ExampleModels
 {
-	public class Hexa8ContinuumNonLinearCantileverDynamicExample
+	public class GmshDynamicModelsProvider
 	{
 		public static IStructuralDofType monitoredDof = StructuralDof.TranslationX;
 		public static int monitoredNode { get; private set; } = 17;
